@@ -1,0 +1,7 @@
+torch
+transformers
+tokenizers
+accelerate
+sentence-transformers
+faiss-cpu
+pyyaml

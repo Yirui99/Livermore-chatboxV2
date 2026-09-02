@@ -1,0 +1,16 @@
+model_name: meta-llama/Llama-3.2-1B-Instruct
+
+build_dataset:
+  data_path: data/sft_dataset.jsonl
+  docs_path: kb_data/trading_docs.pkl
+  index_path: kb_data/trading_index.faiss
+  embed_model: sentence-transformers/all-MiniLM-L6-v2
+
+rag_qa:
+  top_k: 3
+  max_token: 512
+  temperature: 0.7
+  top_p: 0.9
+
+
+
