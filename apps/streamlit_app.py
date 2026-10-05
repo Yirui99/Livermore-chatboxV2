@@ -23,8 +23,8 @@ SETTINGS = Settings()
 
 # label -> backend name
 MODELS = {
-    "RAG Llama (default)": "torch",
-    "RAG Llama · MLX 4-bit": "mlx",
+    "RAG Llama · MLX 4-bit (default)": "mlx",
+    "RAG Llama · PyTorch": "torch",
     "My Custom Transformer (no RAG)": "scratch",
 }
 

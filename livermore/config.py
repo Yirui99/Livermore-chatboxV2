@@ -20,7 +20,7 @@ class Settings:
     embed_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     top_k: int = 3
 
-    backend: str = "torch"
+    backend: str = "mlx"
     device: str = "auto"
     hf_model: str = "meta-llama/Llama-3.2-1B-Instruct"
     mlx_model: str = "mlx-community/Llama-3.2-1B-Instruct-4bit"

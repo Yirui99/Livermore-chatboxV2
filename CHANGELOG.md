@@ -18,8 +18,9 @@ logic were moved, not rewritten.
   - `livermore.serve`: OpenAI-compatible HTTP server (`POST /v1/chat/completions` incl. `stream`,
     `GET /v1/models`, `GET /health`); stdlib only, no new dependencies
   - CLI: `livermore build | ask | serve`
-- MLX is now a selectable generation backend in the app and server. Before this it only
-  existed inside `benchmark_mlx_4bit.py`.
+- MLX is now a generation backend in the app and server, and the default (`backend: mlx`).
+  Before this it only existed inside `benchmark_mlx_4bit.py`; the app used HF torch fp32 on CPU.
+  `--backend torch` restores the old path.
 - `benchmarks/equivalence.py`: checks the package against outputs captured from the
   pre-refactor code (retrieval ids/scores, prompt bytes, greedy generations). The existing
   benchmark scripts don't import app code, so they cannot catch a behaviour change by themselves.
