@@ -59,6 +59,8 @@ def ask(query: str, index, backend, k: int = 3, max_tokens: int = 512, temperatu
     tr = Trace("ask", trace_id=trace_id, attributes={
         "entry": entry, "version": __version__, "query": query[:2000],
         "backend": backend.name, "model": backend.model, "device": backend.device,
+        "device_requested": getattr(backend, "device_requested", None),
+        "revision": getattr(backend, "revision", None),
         "dtype": getattr(backend, "dtype", None), "embed_model": index.embed_model,
         "k": k, "max_tokens": max_tokens, "temperature": temperature, "top_p": top_p,
     })
@@ -87,6 +89,7 @@ def ask(query: str, index, backend, k: int = 3, max_tokens: int = 512, temperatu
 
         stage = "generate"
         s = tr.start("generate", backend=backend.name, model=backend.model, device=backend.device,
+                     device_requested=getattr(backend, "device_requested", None),
                      dtype=getattr(backend, "dtype", None), max_tokens=max_tokens, timeout_s=timeout_s)
         t0, ttft = time.perf_counter(), None
         gen = backend.generate(prompt, max_tokens, temperature=temperature, top_p=top_p, **sampling)

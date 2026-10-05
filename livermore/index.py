@@ -12,7 +12,9 @@ import pickle
 import time
 from dataclasses import dataclass, field
 
+from . import models
 from .config import Settings
+from .errors import IndexNotFound, NotesNotFound
 from .retrieve import Hit, search
 
 DEFAULT_EMBED_MODEL = Settings.embed_model
@@ -50,14 +52,14 @@ class Index:
     embed_model: str = DEFAULT_EMBED_MODEL
     path: str | None = None
     device: str = "auto"
+    embed_revision: str | None = None
     _embedder: object = field(default=None, repr=False)
 
     @property
     def embedder(self):
         if self._embedder is None:
-            from sentence_transformers import SentenceTransformer
             from ._device import resolve_torch_device
-            self._embedder = SentenceTransformer(self.embed_model, device=resolve_torch_device(self.device))
+            self._embedder = load_embedder(self.embed_model, self.embed_revision, resolve_torch_device(self.device))
         return self._embedder
 
     @property
@@ -83,7 +85,8 @@ class Index:
         with open(os.path.join(path, _FILES[1]), "wb") as f:
             pickle.dump(self.docs, f)
         with open(os.path.join(path, "meta.json"), "w") as f:
-            json.dump({"embed_model": self.embed_model, "n_docs": len(self.docs), "dim": self.dim,
+            json.dump({"embed_model": self.embed_model, "embed_revision": models.revision_for(self.embed_model, self.embed_revision),
+                       "n_docs": len(self.docs), "dim": self.dim,
                        "built_at": time.strftime("%Y-%m-%dT%H:%M:%S%z")}, f, indent=2)
         self.path = path
 
@@ -91,24 +94,42 @@ class Index:
         return {"path": self.path, "n_docs": len(self), "dim": self.dim, "embed_model": self.embed_model}
 
 
+def load_embedder(embed_model: str, revision: str | None = None, device: str | None = None):
+    from sentence_transformers import SentenceTransformer
+    from .errors import ModelFileError
+    path = models.ensure(embed_model, revision)
+    try:
+        return SentenceTransformer(path, device=device)
+    except (OSError, ValueError, RuntimeError) as e:
+        raise ModelFileError(f"could not load embedding model {embed_model} from {path}: {type(e).__name__}",
+                             f"run `livermore doctor --verify`, or `livermore models fetch {embed_model} --force`")
+
+
 def build(notes_dir: str, out_dir: str | None = None, embed_model: str = DEFAULT_EMBED_MODEL,
-          batch_size: int = 64, device: str | None = None) -> Index:
+          batch_size: int = 64, device: str | None = None, embed_revision: str | None = None) -> Index:
     """Embed every note and build an exact inner-product index (IndexFlatIP on L2-normalised vectors)."""
     faiss = _faiss()
-    from sentence_transformers import SentenceTransformer
 
-    docs = load_notes(notes_dir)
+    if not os.path.exists(notes_dir):
+        raise NotesNotFound(f"notes directory {notes_dir} does not exist",
+                            "pass --notes <dir> or set notes_dir in ~/.livermore/config.yaml")
+    try:
+        docs = load_notes(notes_dir)
+    except (json.JSONDecodeError, KeyError) as e:
+        raise NotesNotFound(f"could not read notes in {notes_dir}: {type(e).__name__}: {e}",
+                            'each line must be a JSON object with "prompt" and "response"')
     if not docs:
-        raise ValueError(f"no notes found in {notes_dir} (expected *.jsonl with prompt/response)")
+        raise NotesNotFound(f"no notes in {notes_dir}",
+                            'add *.jsonl files there, one {"prompt": ..., "response": ...} per line')
 
-    model = SentenceTransformer(embed_model, device=device)
+    model = load_embedder(embed_model, embed_revision, device)
     emb = model.encode(docs, batch_size=batch_size, show_progress_bar=True,
                        convert_to_numpy=True, normalize_embeddings=False)
     index = faiss.IndexFlatIP(emb.shape[1])
     faiss.normalize_L2(emb)
     index.add(emb)
 
-    idx = Index(index, docs, embed_model=embed_model)
+    idx = Index(index, docs, embed_model=embed_model, embed_revision=embed_revision)
     if out_dir:
         idx.save(out_dir)
     return idx
@@ -117,6 +138,9 @@ def build(notes_dir: str, out_dir: str | None = None, embed_model: str = DEFAULT
 def load(path: str, device: str = "auto") -> Index:
     faiss = _faiss()
 
+    if not os.path.isdir(path):
+        raise IndexNotFound(f"no index at {path}",
+                            "build one with `livermore build --notes <dir>` (or set index_dir in ~/.livermore/config.yaml)")
     meta_path = os.path.join(path, "meta.json")
     meta = {}
     if os.path.exists(meta_path):
@@ -127,9 +151,17 @@ def load(path: str, device: str = "auto") -> Index:
         if os.path.exists(ip) and os.path.exists(dp):
             break
     else:
-        raise FileNotFoundError(f"no index in {path} (looked for {_FILES} or {_LEGACY_FILES})")
-
-    with open(dp, "rb") as f:
-        docs = pickle.load(f)
-    return Index(faiss.read_index(ip), docs, embed_model=meta.get("embed_model", DEFAULT_EMBED_MODEL),
-                 path=path, device=device)
+        raise IndexNotFound(f"{path} has no index files ({' + '.join(_FILES)})",
+                            "build one with `livermore build --notes <dir>`")
+    try:
+        with open(dp, "rb") as f:
+            docs = pickle.load(f)
+        fi = faiss.read_index(ip)
+    except Exception as e:
+        raise IndexNotFound(f"the index in {path} is unreadable ({type(e).__name__})",
+                            "rebuild it with `livermore build`")
+    if fi.ntotal != len(docs):
+        raise IndexNotFound(f"the index in {path} is inconsistent: {fi.ntotal} vectors but {len(docs)} notes",
+                            "rebuild it with `livermore build`")
+    return Index(fi, docs, embed_model=meta.get("embed_model", DEFAULT_EMBED_MODEL), path=path, device=device,
+                 embed_revision=meta.get("embed_revision"))

@@ -4,25 +4,35 @@ from __future__ import annotations
 import threading
 from typing import Iterator
 
+from .. import models
 from .._device import resolve_torch_device
+from ..errors import ModelFileError
 
 
 class TorchBackend:
     name = "torch"
 
-    def __init__(self, model: str = "meta-llama/Llama-3.2-1B-Instruct", device: str = "auto"):
+    def __init__(self, model: str = "meta-llama/Llama-3.2-1B-Instruct", revision: str | None = None,
+                 device: str = "auto"):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         self.model = model
+        self.revision = models.revision_for(model, revision)
+        self.device_requested = device
         self.device = resolve_torch_device(device)
         self.dtype = "float16" if self.device in ("cuda", "mps") else "float32"
         self.last_usage: dict = {}
-        self.tokenizer = AutoTokenizer.from_pretrained(model)
-        self.lm = AutoModelForCausalLM.from_pretrained(
-            model,
-            torch_dtype=torch.float16 if self.device in ["cuda", "mps"] else torch.float32,
-        ).to(self.device)
+        path = models.ensure(model, revision)
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(path)
+            self.lm = AutoModelForCausalLM.from_pretrained(
+                path,
+                torch_dtype=torch.float16 if self.device in ["cuda", "mps"] else torch.float32,
+            ).to(self.device)
+        except (OSError, ValueError, RuntimeError) as e:
+            raise ModelFileError(f"could not load {model} from {path}: {type(e).__name__}: {str(e)[:200]}",
+                                 f"run `livermore doctor --verify`, or `livermore models fetch {model} --force`")
 
     def apply_chat_template(self, messages: list[dict]) -> str:
         return self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)

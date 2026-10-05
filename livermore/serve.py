@@ -52,7 +52,8 @@ class App:
             "version": __version__,
             "uptime_s": round(time.time() - self.started, 1),
             "index": self.index.info(),
-            "backend": {"name": b.name, "model": b.model, "device": b.device, "dtype": getattr(b, "dtype", None)},
+            "backend": {"name": b.name, "model": b.model, "revision": getattr(b, "revision", None), "device": b.device,
+                        "device_requested": getattr(b, "device_requested", None), "dtype": getattr(b, "dtype", None)},
             "traces": trace_root(),
         }
 

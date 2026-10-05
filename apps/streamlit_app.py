@@ -16,16 +16,21 @@ from _style import CHAT_CSS, GLOBAL_CSS  # noqa: E402
 import livermore  # noqa: E402
 from livermore.ask import GenerationTimeout  # noqa: E402
 from livermore.config import Settings  # noqa: E402
+from livermore.errors import LivermoreError  # noqa: E402
 from livermore.trace import record_feedback  # noqa: E402
 
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 st.markdown(CHAT_CSS, unsafe_allow_html=True)
 
-SETTINGS = Settings()
+try:
+    SETTINGS = Settings.load()  # ~/.livermore/config.yaml (or $LIVERMORE_CONFIG): same values as CLI, server, eval
+except LivermoreError as e:
+    st.error(str(e))
+    st.stop()
 
 # label -> backend name
 MODELS = {
-    "RAG Llama · MLX 4-bit (default)": "mlx",
+    "RAG Llama · MLX 4-bit": "mlx",
     "RAG Llama · PyTorch": "torch",
     "My Custom Transformer (no RAG)": "scratch",
 }
@@ -33,7 +38,9 @@ MODELS = {
 
 @st.cache_resource
 def get_index(path: str):
-    return livermore.load(path)
+    idx = livermore.load(path, device=SETTINGS.device)
+    idx.embed_revision = idx.embed_revision or SETTINGS.embed_revision
+    return idx
 
 
 @st.cache_resource
@@ -74,8 +81,9 @@ if "chat_sessions" not in ss:
 if "chat_messages" not in ss:
     ss.chat_messages = {"Current Chat": []}
 if "chatbot_settings" not in ss:
-    ss.chatbot_settings = {"model_label": next(iter(MODELS)), "max_new_tokens": 256,
-                           "temperature": 0.8, "top_p": 0.9, "top_k": 3,
+    ss.chatbot_settings = {"model_label": next(k for k, v in MODELS.items() if v == SETTINGS.backend),
+                           "max_new_tokens": SETTINGS.max_tokens, "temperature": SETTINGS.temperature,
+                           "top_p": SETTINGS.top_p, "top_k": SETTINGS.top_k,
                            "custom_ckpt_path": os.path.relpath(SETTINGS.scratch_ckpt, livermore.config.PROJECT_ROOT)}
 cfg = ss.chatbot_settings
 
@@ -131,8 +139,8 @@ st.caption(f"Current Chat: {ss.current_chat_id}")
 try:
     index = get_index(SETTINGS.index_dir)
     backend = get_backend(backend_name, _resolve(cfg["custom_ckpt_path"]) if backend_name == "scratch" else None)
-except FileNotFoundError as e:
-    st.error(f"File not found: {e}")
+except LivermoreError as e:
+    st.error(e.message + (f"\n\n**Fix:** {e.hint}" if e.hint else ""))
     st.stop()
 except Exception as e:
     msg = str(e)

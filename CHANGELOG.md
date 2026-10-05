@@ -8,6 +8,36 @@ Every number below comes from a script in `benchmarks/`; raw outputs are committ
 Course project restructured into an installable library + apps. RAG and inference
 logic were moved, not rewritten.
 
+### Added — operations (stage 5)
+- `~/.livermore/config.yaml`: notes/index dirs, embed model, top_k, backend, device, models and revisions,
+  max_tokens, temperature, top_p, timeout, host/port. Precedence: built-in default < config file < CLI flag.
+  Unknown keys, wrong types and out-of-range values give one-line errors with a suggestion.
+  `livermore config show | init | path`. There are no chunk parameters because there is no chunking:
+  each JSONL record is one note.
+- **Default temperature 0.2** (was 0.7 in the CLI/server and 0.8 in the UI). The app, server, CLI and (stage 4)
+  eval all read the same config, so daily use and evaluation run with identical settings.
+- Model cache `~/.livermore/models/<owner>--<name>/`, pinned to the revisions the shipped index and benchmarks
+  used (`livermore.models.PINNED`), with `manifest.json` (size + sha256 for LFS files, git sha1 otherwise).
+  On first use a model is copied from the local Hugging Face cache if it holds that revision (verified offline:
+  blob names are hashes), otherwise downloaded from the Hub with progress and checked against the Hub's hashes.
+  Loading does a size check; `livermore doctor --verify` re-hashes. `livermore models list | fetch [repo|all] [--force]`.
+- Device fallback: `device: mps` (or `cuda`) when unavailable → CPU with a warning; MLX without Metal → CPU with a
+  warning. Traces record `device` and `device_requested`.
+- Human-readable errors (no traceback) for: missing/unreadable/inconsistent index, missing/empty/malformed notes,
+  missing/truncated/corrupted model files, gated or unreachable models, missing scratch checkpoint, bad config.
+- `livermore doctor [--verify]`: Python, platform, packages, MLX Metal, torch MPS, config, model files, scratch
+  checkpoint, notes, index (and its embed model/dim vs config), trace dir. Exit 1 on any problem.
+- `tests/test_ops.py` (config, model cache, fallback, errors).
+
+### Fixed — stage 5
+- MLX CPU fallback really runs on CPU. mlx_lm binds its generation stream to the default device at import time,
+  and `import mlx_lm.generate` returns the *function* (the package shadows the module). The first version of the
+  fallback only relabelled the device: it measured the same 363 tok/s as the GPU. Now it measures 5 tok/s, the same
+  as a clean mlx_lm-on-CPU control with identical output. Covered by a regression test.
+
+Verified: loading from `~/.livermore/models` is behaviour-identical (equivalence PASS; MLX greedy output identical to
+loading by repo id).
+
 ### Added — tracing and usage log (stage 3)
 - `livermore.trace`: every `ask()` is a span tree `ask → embed_query / retrieve / build_prompt / generate`,
   following Next AI's `trace.js`. Attributes include backend, model, device (backend and embedder), dtype,

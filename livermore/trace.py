@@ -22,8 +22,7 @@ _WRITE_LOCK = threading.Lock()
 _ID_RE_CHARS = set("0123456789abcdef")
 
 
-def home() -> str:
-    return os.path.expanduser(os.environ.get("LIVERMORE_HOME", "~/.livermore"))
+from .config import home  # noqa: E402
 
 
 def trace_root() -> str:

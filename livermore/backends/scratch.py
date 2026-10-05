@@ -10,6 +10,7 @@ import os
 from typing import Iterator
 
 from .._device import resolve_torch_device
+from ..errors import ModelFileError
 
 
 class ScratchBackend:
@@ -25,15 +26,21 @@ class ScratchBackend:
 
         for what, p in (("checkpoint", ckpt), ("tokenizer", tokenizer)):
             if not os.path.exists(p):
-                raise FileNotFoundError(f"scratch {what} not found: {p}")
+                raise ModelFileError(f"scratch Transformer {what} not found: {p}",
+                                     "checkpoints are not in git; set scratch_ckpt in ~/.livermore/config.yaml")
         self.model = os.path.basename(ckpt)
         self.ckpt = ckpt
+        self.device_requested = device
         self.device = resolve_torch_device(device)
         self.dtype = "float32"
         self.last_usage: dict = {}
         self._dev = torch.device(self.device)
-        (self.tok, self.cfg, self.tok_emb, self.pos_emb,
-         self.lm, kind, self.pad_id) = build_modules(ckpt, tokenizer, self._dev)
+        try:
+            (self.tok, self.cfg, self.tok_emb, self.pos_emb,
+             self.lm, kind, self.pad_id) = build_modules(ckpt, tokenizer, self._dev)
+        except Exception as e:
+            raise ModelFileError(f"could not load scratch checkpoint {ckpt}: {type(e).__name__}: {str(e)[:200]}",
+                                 "the file is probably truncated or corrupted")
         if kind != "seq2seq":
             raise ValueError(f"expected a seq2seq checkpoint, got {kind}: {ckpt}")
 
