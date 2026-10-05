@@ -1,0 +1,32 @@
+/Users/yiruisong/Projects/Livermore-chatboxV2/examples/backtest/livermore_strategy.py:72: FutureWarning: YF.download() has changed argument auto_adjust default to True
+  stock = yf.download(stock_symbol, start_date, end_date, progress=False)
+/Users/yiruisong/Projects/Livermore-chatboxV2/examples/backtest/livermore_strategy.py:72: FutureWarning: YF.download() has changed argument auto_adjust default to True
+  stock = yf.download(stock_symbol, start_date, end_date, progress=False)
+/Users/yiruisong/Projects/Livermore-chatboxV2/examples/backtest/livermore_strategy.py:72: FutureWarning: YF.download() has changed argument auto_adjust default to True
+  stock = yf.download(stock_symbol, start_date, end_date, progress=False)
+/Users/yiruisong/Projects/Livermore-chatboxV2/examples/backtest/livermore_strategy.py:72: FutureWarning: YF.download() has changed argument auto_adjust default to True
+  stock = yf.download(stock_symbol, start_date, end_date, progress=False)
+--- Testing AAPL ---
+Strategy Return: 68.41%
+Buy & Hold Return: 119.25%
+Improvement: -42.64%
+Number of signals/trades: 11
+
+--- Testing TSLA ---
+Strategy Return: 156.88%
+Buy & Hold Return: 308.51%
+Improvement: -49.15%
+Number of signals/trades: 11
+
+--- Testing NVDA ---
+Strategy Return: 155.89%
+Buy & Hold Return: 269.80%
+Improvement: -42.22%
+Number of signals/trades: 14
+
+--- Testing MSFT ---
+Strategy Return: 76.91%
+Buy & Hold Return: 110.01%
+Improvement: -30.09%
+Number of signals/trades: 9
+

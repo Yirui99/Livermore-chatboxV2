@@ -35,6 +35,15 @@ logic were moved, not rewritten.
   fallback only relabelled the device: it measured the same 363 tok/s as the GPU. Now it measures 5 tok/s, the same
   as a clean mlx_lm-on-CPU control with identical output. Covered by a regression test.
 
+- CI (`.github/workflows/ci.yml`, macOS arm64 + Linux): install, unit tests, CLI smoke test (config, models fetch,
+  doctor, one-line errors). Equivalence and benchmarks are not run there: they need the gated Llama weights and an
+  Apple GPU, which hosted runners don't have. They stay local (`benchmarks/`).
+
+Fresh-install check (new venv without system packages, empty HF cache, empty `~/.livermore`, the README's three
+lines): install 31 s (with a warm pip download cache, so a truly new machine will take longer); first question 44 s
+including downloading and verifying 713 MB + 92 MB from the Hub; second question 4 s; `doctor --verify` clean.
+Benchmarks after stage 5 (`benchmarks/after_stage5/`) within noise; equivalence PASS.
+
 Verified: loading from `~/.livermore/models` is behaviour-identical (equivalence PASS; MLX greedy output identical to
 loading by repo id).
 
