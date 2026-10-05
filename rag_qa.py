@@ -34,7 +34,7 @@ class RAGQA:
         if torch.cuda.is_available():
             self.device = "cuda"
         elif hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-            self.device = "mps"
+            self.device = "cpu"  # Forced to cpu to avoid Streamlit threading deadlock
         else:
             self.device = "cpu"
             
