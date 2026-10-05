@@ -1,9 +1,9 @@
 # models/transformer_seq2seq.py
 import torch
 import torch.nn as nn
-import config
-from blocks import EncoderBlock, DecoderBlock
-from layers import LMHead, SoftmaxLastDim
+from .. import config
+from ..blocks import EncoderBlock, DecoderBlock
+from ..layers import LMHead, SoftmaxLastDim
 
 
 class TransformerSeq2Seq(nn.Module):

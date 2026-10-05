@@ -11,8 +11,8 @@ import inspect
 import dataclasses
 from torch.serialization import add_safe_globals
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import config
+from . import config
+from . import load_checkpoint
 
 def allow_config_dataclasses():
     add_safe_globals([obj for _, obj in inspect.getmembers(config)
@@ -71,7 +71,7 @@ def main():
             print(f"  {label:<18}: {path} — NOT FOUND")
             continue
 
-        ckpt = torch.load(path, map_location="cpu", weights_only=False)
+        ckpt = load_checkpoint(path, map_location="cpu", weights_only=False)
         file_size_mb = os.path.getsize(path) / 1024 / 1024
 
         # Extract config
@@ -109,7 +109,7 @@ def main():
         path = os.path.join(ckpt_dir, "sft_best.pt")
         if not os.path.exists(path):
             path = os.path.join(ckpt_dir, "seq2seq_best.pt")
-        ckpt = torch.load(path, map_location="cpu", weights_only=False)
+        ckpt = load_checkpoint(path, map_location="cpu", weights_only=False)
         raw_cfg = ckpt.get("cfg")
         if isinstance(raw_cfg, dict):
             # Rebuild nested dataclass configs from dicts

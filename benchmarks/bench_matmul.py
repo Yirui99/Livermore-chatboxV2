@@ -6,8 +6,7 @@ import torch
 import time
 import sys
 import os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ops
+from livermore.scratch import ops
 
 def measure_matmul(fn, A, B, warmup=5, repeat=50, label=""):
     """Run fn(A, B), return avg_ms and peak_memory_bytes."""

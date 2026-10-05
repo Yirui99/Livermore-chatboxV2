@@ -1,8 +1,8 @@
 # blocks/encoder_block.py
 import torch
 import torch.nn as nn
-import config
-from layers import MultiHeadAttention, FeedForward, AddNormPre
+from .. import config
+from ..layers import MultiHeadAttention, FeedForward, AddNormPre
 
 class EncoderBlock(nn.Module):
 

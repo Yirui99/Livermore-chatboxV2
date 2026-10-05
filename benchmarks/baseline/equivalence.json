@@ -1,0 +1,423 @@
+{
+  "device": "cpu",
+  "search_k": 10,
+  "gen_tokens": 64,
+  "retrieval": {
+    "What is the most important rule in trading?": {
+      "ids": [
+        1021,
+        1005,
+        1121,
+        1042,
+        1172,
+        1019,
+        147,
+        17,
+        1171,
+        1048
+      ],
+      "scores": [
+        0.5380409955978394,
+        0.5217992067337036,
+        0.49016863107681274,
+        0.4900452494621277,
+        0.47973644733428955,
+        0.4722059369087219,
+        0.47157013416290283,
+        0.4688301384449005,
+        0.4662036597728729,
+        0.4636237621307373
+      ]
+    },
+    "How to manage risk in stock trading?": {
+      "ids": [
+        1019,
+        956,
+        994,
+        3,
+        1093,
+        1021,
+        1102,
+        892,
+        6,
+        10
+      ],
+      "scores": [
+        0.5476412773132324,
+        0.5094489455223083,
+        0.5008288621902466,
+        0.47412317991256714,
+        0.46065646409988403,
+        0.4529838263988495,
+        0.45158764719963074,
+        0.44633427262306213,
+        0.4418391287326813,
+        0.43758466839790344
+      ]
+    },
+    "When should I cut my losses?": {
+      "ids": [
+        972,
+        1019,
+        923,
+        998,
+        50,
+        934,
+        981,
+        541,
+        740,
+        1144
+      ],
+      "scores": [
+        0.5111550688743591,
+        0.4828619360923767,
+        0.47158294916152954,
+        0.43758103251457214,
+        0.428279310464859,
+        0.408582478761673,
+        0.40763798356056213,
+        0.3981322944164276,
+        0.39577364921569824,
+        0.3929758667945862
+      ]
+    },
+    "How to identify a trend reversal?": {
+      "ids": [
+        900,
+        893,
+        1067,
+        562,
+        538,
+        1064,
+        729,
+        1059,
+        600,
+        691
+      ],
+      "scores": [
+        0.5819578766822815,
+        0.5286513566970825,
+        0.5238645672798157,
+        0.482246994972229,
+        0.4809126555919647,
+        0.4515381455421448,
+        0.4429173767566681,
+        0.43902021646499634,
+        0.43751782178878784,
+        0.43269190192222595
+      ]
+    },
+    "What is position sizing?": {
+      "ids": [
+        1023,
+        741,
+        792,
+        1025,
+        1003,
+        1029,
+        57,
+        504,
+        1331,
+        1014
+      ],
+      "scores": [
+        0.5381255149841309,
+        0.437732458114624,
+        0.405778169631958,
+        0.39876827597618103,
+        0.39754152297973633,
+        0.3842727541923523,
+        0.37798842787742615,
+        0.36574384570121765,
+        0.34198427200317383,
+        0.3248053789138794
+      ]
+    },
+    "How do you handle a losing streak?": {
+      "ids": [
+        974,
+        816,
+        521,
+        1061,
+        1102,
+        985,
+        981,
+        122,
+        22,
+        25
+      ],
+      "scores": [
+        0.4140305817127228,
+        0.4111504554748535,
+        0.40936315059661865,
+        0.39486998319625854,
+        0.3945470452308655,
+        0.3869841694831848,
+        0.38608241081237793,
+        0.3844374418258667,
+        0.3830416202545166,
+        0.3784548044204712
+      ]
+    },
+    "What makes a great trader?": {
+      "ids": [
+        290,
+        464,
+        202,
+        1055,
+        1136,
+        273,
+        534,
+        1048,
+        746,
+        165
+      ],
+      "scores": [
+        0.5837384462356567,
+        0.5384957194328308,
+        0.5267356634140015,
+        0.5173574686050415,
+        0.515143871307373,
+        0.49850353598594666,
+        0.4950328767299652,
+        0.4912816882133484,
+        0.4912562966346741,
+        0.4894499182701111
+      ]
+    },
+    "When to add to a winning position?": {
+      "ids": [
+        678,
+        34,
+        973,
+        56,
+        4,
+        1144,
+        716,
+        1136,
+        1003,
+        1005
+      ],
+      "scores": [
+        0.46461546421051025,
+        0.440975546836853,
+        0.4173615574836731,
+        0.4111538827419281,
+        0.40359771251678467,
+        0.386747270822525,
+        0.38602790236473083,
+        0.37517181038856506,
+        0.35823413729667664,
+        0.35109978914260864
+      ]
+    },
+    "How to control emotions in trading?": {
+      "ids": [
+        194,
+        1069,
+        146,
+        930,
+        224,
+        282,
+        144,
+        543,
+        1140,
+        168
+      ],
+      "scores": [
+        0.7082191705703735,
+        0.6919234991073608,
+        0.6803662776947021,
+        0.6567445397377014,
+        0.6300987005233765,
+        0.6251156330108643,
+        0.6062524914741516,
+        0.5982962846755981,
+        0.5811510682106018,
+        0.576951265335083
+      ]
+    },
+    "What is the role of patience in trading?": {
+      "ids": [
+        202,
+        1181,
+        1048,
+        1128,
+        744,
+        411,
+        1123,
+        208,
+        1051,
+        1055
+      ],
+      "scores": [
+        0.7489613890647888,
+        0.7313861846923828,
+        0.7196305394172668,
+        0.6795482039451599,
+        0.6025528907775879,
+        0.5933799743652344,
+        0.5912355780601501,
+        0.5902352333068848,
+        0.5889564752578735,
+        0.5881779193878174
+      ]
+    },
+    "Why did Livermore go bankrupt?": {
+      "ids": [
+        507,
+        1234,
+        548,
+        848,
+        745,
+        747,
+        827,
+        690,
+        679,
+        578
+      ],
+      "scores": [
+        0.71029132604599,
+        0.6836006045341492,
+        0.662316620349884,
+        0.6521272659301758,
+        0.6503445506095886,
+        0.6493797898292542,
+        0.6404871344566345,
+        0.640220582485199,
+        0.6300528049468994,
+        0.6289105415344238
+      ]
+    },
+    "What did Livermore think about tips from other people?": {
+      "ids": [
+        585,
+        423,
+        1287,
+        317,
+        451,
+        437,
+        548,
+        743,
+        529,
+        479
+      ],
+      "scores": [
+        0.5978595018386841,
+        0.5963645577430725,
+        0.5858739614486694,
+        0.5856826305389404,
+        0.5742295980453491,
+        0.5733674168586731,
+        0.5727595090866089,
+        0.5711604356765747,
+        0.5705296993255615,
+        0.5673068761825562
+      ]
+    },
+    "How should I react when the market moves against me?": {
+      "ids": [
+        1085,
+        878,
+        887,
+        981,
+        879,
+        995,
+        12,
+        1069,
+        970,
+        948
+      ],
+      "scores": [
+        0.5248671174049377,
+        0.5150125026702881,
+        0.5036599636077881,
+        0.49386706948280334,
+        0.4895583987236023,
+        0.4877415895462036,
+        0.4798576235771179,
+        0.4791109263896942,
+        0.4785120487213135,
+        0.4762527346611023
+      ]
+    },
+    "Is it better to average down on a losing trade?": {
+      "ids": [
+        973,
+        1000,
+        541,
+        50,
+        923,
+        998,
+        1225,
+        4,
+        1021,
+        1102
+      ],
+      "scores": [
+        0.6558547616004944,
+        0.5210071206092834,
+        0.5091928243637085,
+        0.49432137608528137,
+        0.46520060300827026,
+        0.46145766973495483,
+        0.4576893448829651,
+        0.4457232356071472,
+        0.42755454778671265,
+        0.4260900020599365
+      ]
+    },
+    "What is a pivotal point?": {
+      "ids": [
+        635,
+        1026,
+        110,
+        705,
+        117,
+        145,
+        512,
+        158,
+        871,
+        622
+      ],
+      "scores": [
+        0.3647255301475525,
+        0.36020946502685547,
+        0.33725425601005554,
+        0.33720213174819946,
+        0.3351086974143982,
+        0.33372408151626587,
+        0.33038073778152466,
+        0.3291874825954437,
+        0.3259718120098114,
+        0.32314133644104004
+      ]
+    }
+  },
+  "prompt": {
+    "What is the most important rule in trading?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why is risk per trade more important than number of trades?\nAnswer: Frequency means nothing if size is foolish. One big mistake erases a month of precision.\n\n[Note 2]\nQuestion: What principles guide the pyramiding of winning trades?\nAnswer: Add only when the market pays you to. A pyramid stands because its base-discipline-is wide.\n\n[Note 3]\nQuestion: Why is breaking your own rule costlier than breaking even?\nAnswer: A lost trade costs money; a broken rule costs integrity. Once self-trust erodes, every trade feels uncertain.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the most important rule in trading?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "How to manage risk in stock trading?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: When should traders cut exposure even in profitable trades?\nAnswer: Profits aren't permission to ignore risk. The right time to sell is when holding feels too easy.\n\n[Note 2]\nQuestion: How can economic complacency make investors blind to policy risk?\nAnswer: Stability teaches arrogance. When traders believe policy will always rescue them, they stop managing risk.\n\n[Note 3]\nQuestion: How can risk limits prevent catastrophic drawdowns?\nAnswer: Limits are fences that save you from yourself. The trader who respects them trades tomorrow.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow to manage risk in stock trading?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "When should I cut my losses?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: How does cutting losses early preserve both capital and confidence?\nAnswer: Confidence grows from control, not prediction. Quick exits prove mastery over emotion.\n\n[Note 2]\nQuestion: When should traders cut exposure even in profitable trades?\nAnswer: Profits aren't permission to ignore risk. The right time to sell is when holding feels too easy.\n\n[Note 3]\nQuestion: Why do traders cling to losing positions instead of accepting small losses?\nAnswer: Pride hates small losses because it fears being wrong. Small losses are tuition; large ones are expulsion.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen should I cut my losses?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "How to identify a trend reversal?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: How can sharp intraday reversals signal exhaustion of a major trend?\nAnswer: Reversals show control has changed hands. Momentum dies when buyers and sellers trade courage within the same day.\n\n[Note 2]\nQuestion: How can social media sentiment warn of behavioral extremes?\nAnswer: When opinions turn uniform, reversal is near. Modern noise still teaches ancient lessons.\n\n[Note 3]\nQuestion: What objective metrics confirm a trend's re-establishment?\nAnswer: Rising highs, firm closes, and supporting volume tell the truth. Confirmation is structure, not opinion.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow to identify a trend reversal?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "What is position sizing?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why do professionals size positions inversely to uncertainty?\nAnswer: The less I know, the less I risk. Confidence is priced in caution, not size.\n\n[Note 2]\nQuestion: How did Livermore refine his position sizing over time?\nAnswer: He learned to start small, test the trend, and add only after confirming market alignment.\n\n[Note 3]\nQuestion: How did he adapt position sizing to market mood?\nAnswer: Aggression followed calm; caution followed chaos. Emotion dictated leverage.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is position sizing?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "How do you handle a losing streak?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: After three consecutive losses, what adjustment prevents emotional revenge trades?\nAnswer: Stop trading and clear your head. The next trade should wait until logic returns.\n\n[Note 2]\nQuestion: How did he react to false confidence from streaks?\nAnswer: By reducing size until objectivity returned.\n\n[Note 3]\nQuestion: Why did he avoid trading after a long winning streak?\nAnswer: He knew overconfidence clouded timing and led to careless entries.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow do you handle a losing streak?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "What makes a great trader?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why must traders observe themselves as much as markets?\nAnswer: Self-observation reveals hidden impulses. Livermore said the true chart is within the mind.\n\n[Note 2]\nQuestion: How did he cultivate self-control outside trading?\nAnswer: Through moderation?eating, speaking, and spending with precision.\n\n[Note 3]\nQuestion: Why must traders learn emotional patience before financial success?\nAnswer: Without patience, profit feeds instability. Livermore built temperament before fortune.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat makes a great trader?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "When to add to a winning position?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: How did he identify when to add to winners?\nAnswer: He waited for continuation after rest. Strength that repeats deserves support.\n\n[Note 2]\nQuestion: Why cap position adds even when excited by a winner?\nAnswer: A hard cap restrains euphoria and overconfidence that lead to oversized bets.\n\n[Note 3]\nQuestion: Why is adding to a losing trade the opposite of discipline?\nAnswer: Averaging down is arguing with reality. Doubling a mistake only makes it visible.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen to add to a winning position?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "How to control emotions in trading?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why must traders manage emotion like capital?\nAnswer: Uncontrolled emotion wastes attention. Livermore conserved mental energy as carefully as money.\n\n[Note 2]\nQuestion: How can traders detect when emotions start influencing position changes?\nAnswer: When logic seeks excuses, emotion is already in charge. Awareness is the first stop-loss for the mind.\n\n[Note 3]\nQuestion: How can traders prevent emotional contagion from markets?\nAnswer: Limit exposure to noise. Livermore read price, not panic.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow to control emotions in trading?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "What is the role of patience in trading?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why must traders learn emotional patience before financial success?\nAnswer: Without patience, profit feeds instability. Livermore built temperament before fortune.\n\n[Note 2]\nQuestion: What is the role of patience in strategy formation?\nAnswer: Patience turns observation into evidence. The market reveals everything to those who wait without guessing.\n\n[Note 3]\nQuestion: What habits cultivate patience during flat markets?\nAnswer: Build routines that reward observation, not execution. Read, review, reflect-don't force trades.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the role of patience in trading?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "Why did Livermore go bankrupt?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why did Livermore lose money even when he was right about direction?\nAnswer: Because his timing was premature; he acted before the market was ready.\n\n[Note 2]\nQuestion: How did Livermore recover after breaking his own rules?\nAnswer: Every rule break was a financial confession. The punishment was built into the loss itself.\n\n[Note 3]\nQuestion: How did Livermore learn patience?\nAnswer: Through losing money by acting too soon.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhy did Livermore go bankrupt?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "What did Livermore think about tips from other people?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: What was Livermore?s attitude toward ?guessing??\nAnswer: Guessing was the opposite of disciplined timing.\n\n[Note 2]\nQuestion: Why did Livermore mentor younger traders selectively?\nAnswer: He shared only with those who valued observation over shortcuts.\n\n[Note 3]\nQuestion: How did Livermore use feedback to improve his trading system?\nAnswer: Every trade was feedback, not judgment. Profits confirmed discipline; losses exposed emotion.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat did Livermore think about tips from other people?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "How should I react when the market moves against me?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: How should traders respond when liquidity conditions abruptly change?\nAnswer: When liquidity tightens, I trade as if exits are smaller. Size down, move slower, and stay alert.\n\n[Note 2]\nQuestion: What emotional shifts occur as markets turn from greed to fear?\nAnswer: Greed whispers; fear screams. I've seen confidence melt into panic in a single session.\n\n[Note 3]\nQuestion: What emotional indicators show a market moving from confidence to hysteria?\nAnswer: When traders call a market \"unstoppable,\" it's already unstable. Rising emotion is the loudest warning bell.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow should I react when the market moves against me?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "Is it better to average down on a losing trade?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: Why is adding to a losing trade the opposite of discipline?\nAnswer: Averaging down is arguing with reality. Doubling a mistake only makes it visible.\n\n[Note 2]\nQuestion: What does Livermore mean by \"a man must not average losses\"?\nAnswer: Pride kills quicker than bad luck. Averaging down is a prayer, not a plan.\n\n[Note 3]\nQuestion: What did he mean by ?never average losses??\nAnswer: Averaging delayed admitting mistimed entries and deepened losses.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIs it better to average down on a losing trade?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
+    "What is a pivotal point?": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nCutting Knowledge Date: December 2023\nToday Date: 05 Oct 2026\n\nYou are a trading psychology and risk management coach in the style of Jesse Livermore.\nYou will answer the user’s question using the retrieved Q&A notes below as your primary reference.\nUse the notes to guide and support your answer.\nYou may summarize, rephrase, or generalize the ideas from the notes when answering.\nDo NOT hallucinate information that does not appear in the notes.\nOnly say 'I'm unsure' if the notes contain no concepts that are relevant to the question.\n\n================= PLAYBOOK NOTES ================\n[Note 1]\nQuestion: How did he detect turning points before others?\nAnswer: By sensing emotional saturation. When everyone agreed, he prepared to disagree.\n\n[Note 2]\nQuestion: How does scaling out at targets lock gains and limit regret?\nAnswer: Scaling out turns paper profit into progress. Regret only visits those who wait for perfection.\n\n[Note 3]\nQuestion: How does scheduled visualization of plan-consistent exits help?\nAnswer: Previsualizing exits reduces fear during drawdowns and speeds rule-based execution.\n=================================================<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is a pivotal point?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+  },
+  "greedy": {
+    "What is the most important rule in trading?": "I'm unsure.",
+    "How to manage risk in stock trading?": "My friend, managing risk is a crucial aspect of trading, and I'm happy to share some insights with you. As a trading psychology and risk management coach, I'll guide you through the key principles to help you navigate the markets with confidence.\n\n**Understanding Risk**\n\nRisk is an inherent part of trading, and it's",
+    "When should I cut my losses?": "My friend, cutting losses early is a crucial aspect of trading, and I'm glad you asked. As a trading psychology and risk management coach, I'll guide you through the key principles.\n\nCutting losses early is not just about preserving capital; it's also about maintaining confidence. When you cut losses, you're not"
+  },
+  "scratch": {
+    "who are you?": " Humingss and risk. Livermore said the marketue movement overcon the best rule of the market.",
+    "How should I handle losses?": " Opation was his ownise. Livermore said the same same time."
+  }
+}

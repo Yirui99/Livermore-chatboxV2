@@ -1,7 +1,2 @@
-torch
-transformers
-tokenizers
-accelerate
-sentence-transformers
-faiss-cpu
-pyyaml
+# Kept for tools that expect it; the source of truth is pyproject.toml.
+-e .[app,examples]

@@ -7,11 +7,11 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 
-import config
-from models import TransformerSeq2Seq
+from . import config
+from .models import TransformerSeq2Seq
 from tokenizers import Tokenizer
-from layers.token_embedding import TokenEmbedding
-from layers.positional_encoding import SinusoidalPositionalEncoding
+from .layers.token_embedding import TokenEmbedding
+from .layers.positional_encoding import SinusoidalPositionalEncoding
 
 SEED = 42
 random.seed(SEED)

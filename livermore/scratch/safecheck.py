@@ -3,7 +3,8 @@ import argparse, json, os, inspect, dataclasses
 import torch
 from torch.serialization import add_safe_globals
 from tokenizers import Tokenizer
-import config
+from . import config
+from . import load_checkpoint
 
 def allow_config_dataclasses():
     add_safe_globals([obj for _, obj in inspect.getmembers(config)
@@ -11,7 +12,7 @@ def allow_config_dataclasses():
 
 def load_ckpt_cfg(path):
     allow_config_dataclasses()
-    ckpt = torch.load(path, map_location="cpu", weights_only=False)
+    ckpt = load_checkpoint(path, map_location="cpu", weights_only=False)
     raw_cfg = ckpt.get("cfg")
     if isinstance(raw_cfg, dict):
         try:

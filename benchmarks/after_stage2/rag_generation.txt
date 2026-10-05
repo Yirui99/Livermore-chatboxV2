@@ -1,0 +1,27 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Model: meta-llama/Llama-3.2-1B-Instruct
+
+--- Benchmarking on CPU (torch.float32) ---
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  68%|██████▊   | 99/146 [00:00<00:00, 955.30it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 907.16it/s]
+Model load time: 0.82 s
+Warming up...
+Generating...
+Generation time: 3.18 s
+Tokens generated: 100
+Speed: 31.44 tokens/sec
+
+--- Benchmarking on MPS (torch.float16) ---
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1602.18it/s]
+Model load time: 0.81 s
+Warming up...
+Generating...
+Generation time: 1.67 s
+Tokens generated: 100
+Speed: 60.03 tokens/sec
+
+====================================
+QUANTITATIVE RESULTS:
+Old CPU Time: 3.18s | Speed: 31.44 tokens/s
+New MPS Time: 1.67s | Speed: 60.03 tokens/s
+Performance Multiplier: 1.91x faster generation
+====================================

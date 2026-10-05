@@ -15,10 +15,11 @@ from torch.serialization import add_safe_globals
 from tqdm import tqdm
 
 # === 你的项目内模块 ===
-import config
-from models import TransformerSeq2Seq
-from layers.token_embedding import TokenEmbedding
-from layers.positional_encoding import SinusoidalPositionalEncoding
+from . import config
+from . import load_checkpoint
+from .models import TransformerSeq2Seq
+from .layers.token_embedding import TokenEmbedding
+from .layers.positional_encoding import SinusoidalPositionalEncoding
 # -----------------------------
 # Tokenizer & special tokens
 # -----------------------------
@@ -154,7 +155,7 @@ def build_modules_from_ckpt(ckpt_path: str, device: torch.device):
     # 允许旧 ckpt 里序列化的 ModelConfig（PyTorch 2.6+ 安全变更）
     add_safe_globals([config.ModelConfig])
 
-    ckpt = torch.load(ckpt_path, map_location="cpu", weights_only=False) 
+    ckpt = load_checkpoint(ckpt_path, map_location="cpu", weights_only=False) 
     raw_cfg = ckpt.get("cfg", None)
 
     if isinstance(raw_cfg, dict):

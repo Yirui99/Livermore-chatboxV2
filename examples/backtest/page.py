@@ -178,11 +178,6 @@ def show_stock_selection_page():
 
     st.title("Stock Selection & Analysis")
 
-    # Back to main page button
-    if st.button("← Back to Main"):
-        st.session_state.page = "main"
-        st.rerun()
-
     # Settings expander for color scheme
     with st.expander("⚙️ Settings", expanded=False):
         color_scheme = st.radio(

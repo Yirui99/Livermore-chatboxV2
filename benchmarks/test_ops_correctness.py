@@ -10,8 +10,7 @@ Reports max absolute error, max relative error, and allclose pass/fail.
 import torch
 import torch.nn.functional as F
 import sys, os
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import ops
+from livermore.scratch import ops
 
 def test_softmax():
     print("=" * 70)

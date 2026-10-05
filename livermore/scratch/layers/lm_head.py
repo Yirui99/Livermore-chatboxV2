@@ -1,8 +1,8 @@
 # layers/lm_head.py
 import torch
 import torch.nn as nn
-import ops
-import config
+from .. import ops
+from .. import config
 
 class LMHead(nn.Module):
     def __init__(self, cfg: config.ModelConfig, bias: bool = False):

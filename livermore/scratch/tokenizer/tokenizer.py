@@ -6,8 +6,7 @@ from tokenizers.decoders import ByteLevel as ByteLevelDecoder
 from tokenizers.normalizers import NFKC
 from tokenizers.processors import TemplateProcessing
 import sys, pathlib
-sys.path.append(str(pathlib.Path(__file__).resolve().parents[1]))
-from config import ModelConfig
+from ..config import ModelConfig
 
 
 tok = Tokenizer(BPE(unk_token="<unk>"))

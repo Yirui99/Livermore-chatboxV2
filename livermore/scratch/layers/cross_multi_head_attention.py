@@ -1,8 +1,8 @@
 import math
 import torch
 import torch.nn as nn
-import ops
-import config
+from .. import ops
+from .. import config
 
 def _to_heads(t: torch.Tensor, n_head: int) -> torch.Tensor:
     B, T, D = t.shape

@@ -2,8 +2,8 @@
 import torch
 import torch.nn as nn
 
-import config
-from layers import MaskedMultiHeadAttention, CrossMultiHeadAttention, FeedForward, AddNormPre
+from .. import config
+from ..layers import MaskedMultiHeadAttention, CrossMultiHeadAttention, FeedForward, AddNormPre
 
 class TransformerDecoderBlock(nn.Module):
 

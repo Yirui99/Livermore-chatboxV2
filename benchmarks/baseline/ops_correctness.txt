@@ -1,0 +1,45 @@
+======================================================================
+TEST: ops.softmax vs torch.nn.functional.softmax
+======================================================================
+  Normal fp32               | max_abs_err=4.47e-08 | max_rel_err=3.54e-07 | nan=False inf=False | ✅ PASS
+  Normal fp16               | max_abs_err=3.05e-05 | max_rel_err=9.72e-04 | nan=False inf=False | ❌ FAIL
+  Large values              | max_abs_err=1.19e-07 | max_rel_err=2.03e-07 | nan=False inf=False | ✅ PASS
+  Very large values         | max_abs_err=0.00e+00 | max_rel_err=0.00e+00 | nan=False inf=False | ✅ PASS
+  Small values              | max_abs_err=7.45e-09 | max_rel_err=2.38e-07 | nan=False inf=False | ✅ PASS
+  Mixed sign                | max_abs_err=1.19e-07 | max_rel_err=1.95e-07 | nan=False inf=False | ✅ PASS
+
+======================================================================
+TEST: ops.layer_norm vs torch.nn.functional.layer_norm
+======================================================================
+  Normal fp32 (B=2,T=64,D=256)        | max_abs_err=4.77e-07 | max_rel_err=3.84e-04 | ✅ PASS
+  Normal fp16 (B=2,T=64,D=256)        | max_abs_err=1.22e-04 | max_rel_err=5.15e-04 | ❌ FAIL
+  Large values                        | max_abs_err=4.77e-07 | max_rel_err=5.48e-04 | ✅ PASS
+  Small values                        | max_abs_err=9.31e-10 | max_rel_err=1.98e-05 | ✅ PASS
+
+======================================================================
+TEST: ops.gelu vs torch.nn.functional.gelu
+======================================================================
+  Exact GELU fp32                | max_abs_err=2.38e-07 | max_rel_err=8.01e-05 | ✅ PASS
+  Approx GELU fp32               | max_abs_err=0.00e+00 | max_rel_err=0.00e+00 | ✅ PASS
+  Exact GELU large values        | max_abs_err=4.77e-07 | max_rel_err=7.84e-04 | ✅ PASS
+  Approx GELU large values       | max_abs_err=0.00e+00 | max_rel_err=0.00e+00 | ✅ PASS
+
+======================================================================
+TEST: ops.matmul vs torch.matmul
+======================================================================
+  2D (128, 64) @ (64, 256)                      | max_abs_err=1.14e-05 | ✅ PASS
+  3D (2, 128, 64) @ (2, 64, 256)                | max_abs_err=1.14e-05 | ✅ PASS
+  4D (2, 4, 64, 64) @ (2, 4, 64, 64)            | max_abs_err=9.54e-06 | ✅ PASS
+
+======================================================================
+TEST: FP16 overflow protection in ops.softmax
+======================================================================
+  Input (fp16): tensor([[500., 600., 700., 800.]], dtype=torch.float16)
+  Naive softmax (no protection):   nan=True  inf=False  → ❌ BROKEN
+  ops.softmax (with protection):   nan=False inf=False → ✅ SAFE
+  Output: tensor([[0., 0., 0., 1.]], dtype=torch.float16)
+  Sum:    1.000000 (should be ~1.0)
+
+======================================================================
+ALL TESTS COMPLETE
+======================================================================

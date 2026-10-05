@@ -5,12 +5,13 @@
 import argparse, torch
 from tokenizers import Tokenizer
 from torch.serialization import add_safe_globals
-import config as cfgmod
+from . import config as cfgmod
+from . import load_checkpoint
 
-import config
-from models import DecoderOnlyLM, TransformerSeq2Seq
-from layers.token_embedding import TokenEmbedding
-from layers.positional_encoding import SinusoidalPositionalEncoding
+from . import config
+from .models import DecoderOnlyLM, TransformerSeq2Seq
+from .layers.token_embedding import TokenEmbedding
+from .layers.positional_encoding import SinusoidalPositionalEncoding
 
 @torch.no_grad()
 def top_k_sample(logits: torch.Tensor, temperature: float = 1.0, top_k: int = 0) -> int:
@@ -50,7 +51,7 @@ def build_modules(ckpt_path: str, tokenizer_json: str, device: torch.device):
         cfgmod.FFNConfig,
         cfgmod.AddNormConfig,
     ])
-    ckpt = torch.load(ckpt_path, map_location="cpu")
+    ckpt = load_checkpoint(ckpt_path, map_location="cpu")
     if isinstance(ckpt["cfg"], dict):
         cfg = config.ModelConfig(**{k: v for k, v in ckpt["cfg"].items() if hasattr(config.ModelConfig, k)})
     else:

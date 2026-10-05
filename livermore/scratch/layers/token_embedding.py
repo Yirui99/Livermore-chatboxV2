@@ -1,7 +1,7 @@
 # layers/token_embedding.py
 import torch
 import torch.nn as nn
-import ops
+from .. import ops
 
 class TokenEmbedding(nn.Module):
     def __init__(self, vocab_size: int, d_model: int, pad_id: int = 0, std: float = 0.02):

@@ -1,9 +1,9 @@
 # models/decoder_only_lm.py
 import torch
 import torch.nn as nn
-import config
-from blocks import CausalDecoderBlock
-from layers import LMHead, SoftmaxLastDim
+from .. import config
+from ..blocks import CausalDecoderBlock
+from ..layers import LMHead, SoftmaxLastDim
 
 
 class DecoderOnlyLM(nn.Module):

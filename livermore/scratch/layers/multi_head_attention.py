@@ -1,8 +1,8 @@
 import math
 import torch
 import torch.nn as nn
-import ops
-import config
+from .. import ops
+from .. import config
 
 class MultiHeadAttention(nn.Module):
 
