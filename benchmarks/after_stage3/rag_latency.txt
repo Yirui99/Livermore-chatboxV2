@@ -1,0 +1,51 @@
+======================================================================
+RAG LATENCY BENCHMARK v2
+======================================================================
+
+--- Index Statistics ---
+  Documents:          1367
+  Vectors in index:   1367
+  Embedding dim:      384
+  Index file size:    2.00 MB
+  Docs file size:     0.21 MB
+  Avg doc length:     154 chars
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 27306.32it/s]
+
+--- Warmup (10 queries, discarded) ---
+  Done.
+
+--- Embedding Latency (N=100 queries, post-warmup) ---
+  Model:   sentence-transformers/all-MiniLM-L6-v2
+  Mean:    4.37 ms
+  P50:     4.13 ms
+  P95:     5.89 ms
+  P99:     6.25 ms
+  Min:     3.36 ms
+  Max:     6.25 ms
+
+--- FAISS Search Latency (N=100 queries, top_k=3) ---
+  Mean:    0.0335 ms
+  P50:     0.0326 ms
+  P95:     0.0418 ms
+  P99:     0.0478 ms
+
+--- Combined Retrieval Latency (embed + search, N=100) ---
+  Mean:    4.40 ms
+  P50:     4.16 ms
+  P95:     5.93 ms
+
+--- Retrieval Quality Sample ---
+  Query: "What is the most important rule in trading?"
+  Top-1 (score=0.5380): Question: Why is risk per trade more important than number of trades? Answer: Frequency means nothing if size is foolish. One big mistake erases a mon...
+  Top-2 (score=0.5218): Question: What principles guide the pyramiding of winning trades? Answer: Add only when the market pays you to. A pyramid stands because its base-disc...
+  Top-3 (score=0.4902): Question: Why is breaking your own rule costlier than breaking even? Answer: A lost trade costs money; a broken rule costs integrity. Once self-trust ...
+
+======================================================================
+SUMMARY
+======================================================================
+  Index:     1367 docs, dim=384
+  Embed:     mean=4.37 ms  P50=4.13 ms  P95=5.89 ms
+  Search:    mean=0.0335 ms  P50=0.0326 ms  P95=0.0418 ms
+  Retrieval: mean=4.40 ms  P50=4.16 ms  P95=5.93 ms
+  Bottleneck: Embedding (4.37 ms)
+======================================================================

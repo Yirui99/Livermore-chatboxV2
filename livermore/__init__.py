@@ -2,26 +2,13 @@
 
 __version__ = "0.1.0"
 
-__all__ = ["__version__", "Index", "Hit", "Answer", "build", "load", "ask", "get_backend"]
+# These modules are light (torch/faiss/mlx are imported inside functions), so import
+# eagerly. That also guarantees `livermore.ask` is the function: the submodule
+# livermore/ask.py is bound here first and then shadowed, and a later
+# `from livermore.ask import X` does not rebind it.
+from .ask import Answer, GenerationTimeout, ask  # noqa: E402
+from .generate import get_backend  # noqa: E402
+from .index import Index, build, load  # noqa: E402
+from .retrieve import Hit  # noqa: E402
 
-
-_EXPORTS = {
-    "Index": "index", "build": "index", "load": "index",
-    "Hit": "retrieve",
-    "Answer": "ask", "ask": "ask",
-    "get_backend": "generate",
-}
-
-
-def __getattr__(name):
-    # Lazy so that `import livermore` / `livermore --version` don't pull in torch/faiss.
-    if name not in _EXPORTS:
-        raise AttributeError(f"module 'livermore' has no attribute {name!r}")
-    import importlib
-    mod = importlib.import_module(f"{__name__}.{_EXPORTS[name]}")
-    # Importing livermore.ask binds the *module* as livermore.ask; rebind every export
-    # from that module so livermore.ask is the function.
-    for k, v in _EXPORTS.items():
-        if v == _EXPORTS[name]:
-            globals()[k] = getattr(mod, k)
-    return globals()[name]
+__all__ = ["__version__", "Index", "Hit", "Answer", "GenerationTimeout", "build", "load", "ask", "get_backend"]

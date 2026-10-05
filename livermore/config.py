@@ -31,6 +31,7 @@ class Settings:
     max_tokens: int = 512
     temperature: float = 0.7
     top_p: float = 0.9
+    timeout_s: float = 120.0  # generation wall-clock limit; exceeded -> generation_timeout span
 
     host: str = "127.0.0.1"
     port: int = 8000

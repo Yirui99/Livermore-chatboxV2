@@ -13,7 +13,8 @@
 pip install -e ".[app]"
 livermore ask "When should I cut my losses?"            # --backend torch | mlx | scratch
 livermore serve --backend mlx                            # OpenAI-compatible, http://127.0.0.1:8000/v1
-streamlit run apps/streamlit_app.py
+livermore app                                            # Streamlit UI, with 👍/👎 per answer
+livermore stats --since 7d                               # usage from ~/.livermore/traces
 ```
 
 The full README is coming in a later stage. See `CHANGELOG.md` for what changed.

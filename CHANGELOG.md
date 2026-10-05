@@ -8,6 +8,35 @@ Every number below comes from a script in `benchmarks/`; raw outputs are committ
 Course project restructured into an installable library + apps. RAG and inference
 logic were moved, not rewritten.
 
+### Added — tracing and usage log (stage 3)
+- `livermore.trace`: every `ask()` is a span tree `ask → embed_query / retrieve / build_prompt / generate`,
+  following Next AI's `trace.js`. Attributes include backend, model, device (backend and embedder), dtype,
+  prompt/completion tokens, TTFT, tokens/s, hit ids and scores, the query and the answer.
+  Written to `~/.livermore/traces/YYYY-MM-DD/trace_<id>.jsonl` (UTC day), plus one summary row per trace in
+  `~/.livermore/traces/index.jsonl`. `LIVERMORE_HOME` moves it.
+- Failures are traced too, each as a `status=error` span with an `error_kind`: `backend_error` (exception in
+  generation, re-raised), `generation_timeout` (`timeout_s`, default 120 s; generation is actually stopped and the
+  partial text kept), `empty_retrieval` (no notes found; the answer still proceeds). Exceptions in the other
+  stages are recorded as `<stage>_error`.
+- 👍/👎 per answer: buttons in Streamlit, `POST /v1/feedback` on the server, `livermore feedback <id> up|down`.
+  Written as a `feedback` span into the trace and as a row in `index.jsonl`; the last click wins.
+- `livermore stats --since 7d`: query count, failure rate, active days, latency p50/p95/mean (nearest-rank),
+  TTFT, retrieval time, tokens/s, error kinds, feedback; grouped `--by backend day entry device`.
+  `--list [--rated down]`, `--trace <id>`, `--json`. Traffic with `entry=eval|test` is excluded unless `--include-eval`.
+- `livermore app` (opens the Streamlit app), `--timeout` on `ask`/`serve`, `tests/test_trace.py`.
+
+### Changed — stage 3
+- `import livermore` imports its light submodules eagerly. Importing them lazily let
+  `from livermore.ask import X` rebind `livermore.ask` to the module, breaking `livermore.ask(...)`.
+  `import livermore` takes 15 ms and still loads no torch/faiss/mlx.
+- Streamlit keeps retrieved notes and the trace id with each message, so notes and 👍/👎 stay visible in history.
+
+Benchmarks after stage 3 (`benchmarks/after_stage3/`): all within noise of the baseline, and equivalence still
+PASS. Query embedding P50 measured 4.13 ms against 3.92 ms at baseline. The benchmark script doesn't use package
+code, so to check this I ran the **unmodified pre-refactor checkout** 5 times at the same time:
+P50 4.14–5.39 ms, vs. 4.08–4.22 ms for this tree (plus one 6.22 ms outlier). The difference is machine state,
+not the refactor.
+
 ### Added
 - `livermore` package (`pip install -e .`, `livermore --version`)
   - `livermore.index`: `build(notes_dir) -> Index`, `load(path) -> Index`

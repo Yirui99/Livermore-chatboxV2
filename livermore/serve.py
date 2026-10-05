@@ -17,7 +17,8 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from . import __version__
-from .ask import ask
+from .ask import GenerationTimeout, ask
+from .trace import record_feedback, trace_root
 
 
 def _last_user_text(messages) -> str | None:
@@ -52,6 +53,7 @@ class App:
             "uptime_s": round(time.time() - self.started, 1),
             "index": self.index.info(),
             "backend": {"name": b.name, "model": b.model, "device": b.device, "dtype": getattr(b, "dtype", None)},
+            "traces": trace_root(),
         }
 
     def params(self, body: dict) -> dict:
@@ -61,6 +63,8 @@ class App:
             "max_tokens": int(body.get("max_tokens") or body.get("max_completion_tokens") or d.max_tokens),
             "temperature": float(body.get("temperature", d.temperature)),
             "top_p": float(body.get("top_p", d.top_p)),
+            "timeout_s": d.timeout_s,
+            "entry": "serve",
         }
 
 
@@ -92,13 +96,16 @@ def make_handler(app: App):
             self._error(404, f"no route {self.path}")
 
         def do_POST(self):
-            if self.path.split("?")[0].rstrip("/") != "/v1/chat/completions":
+            route = self.path.split("?")[0].rstrip("/")
+            if route not in ("/v1/chat/completions", "/v1/feedback"):
                 return self._error(404, f"no route {self.path}")
             try:
                 n = int(self.headers.get("Content-Length") or 0)
                 body = json.loads(self.rfile.read(n) or b"{}")
             except (ValueError, json.JSONDecodeError):
                 return self._error(400, "request body is not valid JSON")
+            if route == "/v1/feedback":
+                return self._feedback(body)
             query = _last_user_text(body.get("messages"))
             if not query:
                 return self._error(400, "messages must contain a non-empty user message")
@@ -113,6 +120,8 @@ def make_handler(app: App):
             try:
                 with app.lock:
                     ans = ask(query, app.index, app.backend, **p)
+            except GenerationTimeout as e:
+                return self._error(504, str(e), "timeout")
             except Exception as e:
                 return self._error(500, f"{type(e).__name__}: {e}", "server_error")
             u = ans.usage
@@ -128,6 +137,14 @@ def make_handler(app: App):
                           "total_tokens": u.get("prompt_tokens", 0) + u.get("completion_tokens", 0)},
                 "livermore": {"trace_id": ans.trace_id, "hits": _hits_json(ans.hits), "timings_ms": ans.timings_ms},
             })
+
+        def _feedback(self, body):
+            rating = {"up": 1, "down": -1, 1: 1, -1: -1}.get(body.get("rating"))
+            if not isinstance(body.get("trace_id"), str) or not body["trace_id"] or rating is None:
+                return self._error(400, 'expected {"trace_id": "...", "rating": "up" | "down"}')
+            if not record_feedback(body["trace_id"], rating, body.get("comment"), entry="serve"):
+                return self._error(404, f"trace not found: {body['trace_id']}")
+            self._json(200, {"ok": True})
 
         def _stream(self, query, p, created, model):
             self.send_response(200)

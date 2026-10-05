@@ -14,7 +14,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _style import CHAT_CSS, GLOBAL_CSS  # noqa: E402
 
 import livermore  # noqa: E402
+from livermore.ask import GenerationTimeout  # noqa: E402
 from livermore.config import Settings  # noqa: E402
+from livermore.trace import record_feedback  # noqa: E402
 
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 st.markdown(CHAT_CSS, unsafe_allow_html=True)
@@ -40,6 +42,24 @@ def get_backend(name: str, ckpt: str | None = None):
     if name == "scratch" and ckpt:
         kw["ckpt"] = ckpt
     return livermore.get_backend(name, **kw)
+
+
+def feedback_buttons(msg: dict, key: str):
+    """👍/👎 under an answer; the click is written into that answer's trace."""
+    tid = msg.get("trace_id")
+    if not tid:
+        return
+    rating = msg.get("rating")
+    c1, c2, c3 = st.columns([1, 1, 8])
+    if c1.button("👍", key=f"up_{key}", type="primary" if rating == 1 else "secondary"):
+        if record_feedback(tid, 1, entry="streamlit"):
+            msg["rating"] = 1
+            st.rerun()
+    if c2.button("👎", key=f"down_{key}", type="primary" if rating == -1 else "secondary"):
+        if record_feedback(tid, -1, entry="streamlit"):
+            msg["rating"] = -1
+            st.rerun()
+    c3.caption(f"trace {tid}" + {1: " · rated 👍", -1: " · rated 👎"}.get(rating, ""))
 
 
 def _resolve(path: str) -> str:
@@ -125,9 +145,23 @@ except Exception as e:
     st.stop()
 
 messages = ss.chat_messages.setdefault(ss.current_chat_id, [])
-for m in messages:
+
+
+def render_body(m: dict, i: int):
+    st.markdown(m["content"])
+    if m.get("hits"):
+        with st.expander("🔍 Retrieved notes"):
+            for j, (score, text) in enumerate(m["hits"]):
+                st.markdown(f"**Note {j + 1}** (score = `{score:.4f}`)")
+                st.write(text[:600] + ("..." if len(text) > 600 else ""))
+                st.markdown("---")
+    if m["role"] == "assistant":
+        feedback_buttons(m, f"{ss.current_chat_id}_{i}")
+
+
+for i, m in enumerate(messages):
     with st.chat_message(m["role"]):
-        st.markdown(m["content"])
+        render_body(m, i)
 
 query = st.chat_input("Type your question here...")
 if not query:
@@ -140,22 +174,22 @@ with st.chat_message("user"):
 with st.chat_message("assistant"):
     with st.spinner("Thinking..."):
         try:
+            common = dict(max_tokens=cfg["max_new_tokens"], temperature=cfg["temperature"], top_p=cfg["top_p"],
+                          entry="streamlit", timeout_s=SETTINGS.timeout_s)
             if backend_name == "scratch":
                 # The scratch model gets only the question; its top_k is a sampling parameter.
-                ans = livermore.ask(query, index, backend, k=SETTINGS.top_k, max_tokens=cfg["max_new_tokens"],
-                                    temperature=cfg["temperature"], top_p=cfg["top_p"], top_k=cfg["top_k"])
+                ans = livermore.ask(query, index, backend, k=SETTINGS.top_k, top_k=cfg["top_k"], **common)
             else:
-                ans = livermore.ask(query, index, backend, k=cfg["top_k"], max_tokens=cfg["max_new_tokens"],
-                                    temperature=cfg["temperature"], top_p=cfg["top_p"])
+                ans = livermore.ask(query, index, backend, k=cfg["top_k"], **common)
+        except GenerationTimeout as e:
+            st.error(f"Generation timed out after {e.timeout_s:g}s. Partial answer:\n\n{e.partial}")
+            st.stop()
         except Exception as e:
             st.error(f"Error during generation: {type(e).__name__}: {e}")
             st.stop()
-    st.markdown(ans.text)
-    if backend_name != "scratch":
-        with st.expander("🔍 Retrieved notes"):
-            for i, h in enumerate(ans.hits):
-                st.markdown(f"**Note {i + 1}** (score = `{h.score:.4f}`)")
-                st.write(h.text[:600] + ("..." if len(h.text) > 600 else ""))
-                st.markdown("---")
-
-messages.append({"role": "assistant", "content": ans.text})
+    # The scratch model never sees the notes, so don't show them as if it did.
+    hits = [] if backend_name == "scratch" else [(h.score, h.text) for h in ans.hits]
+    msg = {"role": "assistant", "content": ans.text, "trace_id": ans.trace_id, "hits": hits}
+    messages.append(msg)
+    # Same widget keys as the history loop uses on the next run, so a 👍/👎 click lands on this message.
+    render_body(msg, len(messages) - 1)

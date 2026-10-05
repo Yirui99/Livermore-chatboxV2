@@ -22,6 +22,7 @@ dependencies = [
 [project.optional-dependencies]
 app = ["streamlit"]
 examples = ["yfinance", "pandas", "matplotlib"]
+dev = ["pytest", "openai"]
 
 [project.scripts]
 livermore = "livermore.cli:main"

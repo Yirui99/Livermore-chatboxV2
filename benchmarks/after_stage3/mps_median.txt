@@ -1,0 +1,42 @@
+======================================================================
+MPS FP16 SPEED — 3-RUN MEDIAN BENCHMARK
+Model: meta-llama/Llama-3.2-1B-Instruct
+Max new tokens: 100
+Runs per config: 5
+======================================================================
+
+--- CPU fp32 (5 trials) ---
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  71%|███████   | 104/146 [00:00<00:00, 998.39it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1074.84it/s]
+  Trial 1: 30.33 t/s (100 tokens in 3.30s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 120/146 [00:00<00:00, 1156.04it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1214.78it/s]
+  Trial 2: 30.01 t/s (100 tokens in 3.33s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 120/146 [00:00<00:00, 1194.58it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1242.50it/s]
+  Trial 3: 31.16 t/s (100 tokens in 3.21s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 120/146 [00:00<00:00, 1198.35it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1228.05it/s]
+  Trial 4: 31.09 t/s (100 tokens in 3.22s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 120/146 [00:00<00:00, 1191.60it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1239.96it/s]
+  Trial 5: 31.24 t/s (100 tokens in 3.20s)
+  ---
+  Min:    30.01 t/s
+  Median: 31.09 t/s  ← USE THIS
+  Max:    31.24 t/s
+
+--- MPS fp16 (5 trials) ---
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1685.21it/s]
+  Trial 1: 60.86 t/s (100 tokens in 1.64s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1639.55it/s]
+  Trial 2: 76.47 t/s (100 tokens in 1.31s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1837.60it/s]
+  Trial 3: 75.93 t/s (100 tokens in 1.32s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1706.20it/s]
+  Trial 4: 75.28 t/s (100 tokens in 1.33s)
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights: 100%|██████████| 146/146 [00:00<00:00, 1942.06it/s]
+  Trial 5: 74.77 t/s (100 tokens in 1.34s)
+  ---
+  Min:    60.86 t/s
+  Median: 75.28 t/s  ← USE THIS
+  Max:    76.47 t/s
+
+======================================================================
+DONE — Use the MEDIAN values for reporting.
+======================================================================
