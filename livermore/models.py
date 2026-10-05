@@ -6,6 +6,11 @@ On first use a model is fetched from, in order:
   2. the Hugging Face Hub (progress bars; each file checked against the Hub's sha256 / git sha1).
 A manifest.json records every file's size and hash. Loading does a quick size check;
 `livermore doctor --verify` re-hashes everything.
+
+For the pinned revisions the expected size and hash of every file ships with the package
+(pinned_files.json, cross-checked against the Hub's metadata), so a copy is verified the same way
+wherever it came from. Blob names in the HF cache are not used as hashes for these: with
+Xet-backed repos (huggingface_hub >= 1.x) an LFS blob is named by its Xet hash, not its sha256.
 """
 from __future__ import annotations
 
@@ -29,6 +34,15 @@ PINNED = {
 ALLOW = ["*.json", "*.safetensors", "*.txt"]
 IGNORE = ["original/*", "onnx/*", "openvino/*"]
 MANIFEST = "manifest.json"
+
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "pinned_files.json")) as _f:
+    PINNED_FILES = json.load(_f)
+
+
+def expected_files(repo_id: str, rev: str) -> dict | None:
+    """Shipped {path: {size, sha256|git_sha1}} for a pinned revision, else None."""
+    p = PINNED_FILES.get(repo_id)
+    return p["files"] if p and p["revision"] == rev else None
 
 
 def local_dir(repo_id: str) -> str:
@@ -141,7 +155,7 @@ def fetch(repo_id: str, revision: str | None = None, force: bool = False) -> str
 
 
 def _from_hf_cache(repo_id: str, rev: str, tmp: str) -> dict | None:
-    """Copy the pinned snapshot out of the local HF cache, verifying each blob against its name."""
+    """Copy the pinned snapshot out of the local HF cache and verify it. None = not usable, use the Hub."""
     try:
         from huggingface_hub.constants import HF_HUB_CACHE
     except ImportError:
@@ -149,28 +163,36 @@ def _from_hf_cache(repo_id: str, rev: str, tmp: str) -> dict | None:
     snap = os.path.join(HF_HUB_CACHE, "models--" + repo_id.replace("/", "--"), "snapshots", rev)
     if not os.path.isdir(snap):
         return None
-    entries = []
-    for root, _, names in os.walk(snap):
-        for n in names:
-            rel = os.path.relpath(os.path.join(root, n), snap)
-            if _wanted(rel):
-                entries.append(rel)
+    pinned = expected_files(repo_id, rev)
+    if pinned is not None:
+        # Every pinned file except optional extras must be there (the Hub lists data_config.json etc.).
+        entries = [rel for rel in pinned if os.path.exists(os.path.join(snap, rel))]
+        if not any(rel.endswith(".safetensors") for rel in entries):
+            return None
+    else:
+        entries = []
+        for root, _, names in os.walk(snap):
+            entries += [os.path.relpath(os.path.join(root, n), snap) for n in names]
+        entries = [rel for rel in entries if _wanted(rel)]
     if not entries:
         return None
     _log(f"{repo_id}: copying revision {rev[:10]} from the local Hugging Face cache into {local_dir(repo_id)}")
     files = {}
     for rel in sorted(entries):
         src = os.path.join(snap, rel)
-        blob = os.path.basename(os.path.realpath(src))
-        expected = {"sha256": blob} if len(blob) == 64 else {"git_sha1": blob} if len(blob) == 40 else None
-        if expected is None:
-            return None  # not a standard cache layout; fall back to the Hub
+        if pinned is not None:
+            expected = {k: v for k, v in pinned[rel].items() if k != "size"}
+        else:  # unpinned model: older caches name blobs by sha256 / git sha1
+            blob = os.path.basename(os.path.realpath(src))
+            expected = {"sha256": blob} if len(blob) == 64 else {"git_sha1": blob} if len(blob) == 40 else None
+            if expected is None:
+                return None
         out = os.path.join(tmp, rel)
         os.makedirs(os.path.dirname(out), exist_ok=True)
         shutil.copyfile(src, out)
         if not _hash_matches(out, expected):
             shutil.rmtree(tmp, ignore_errors=True)
-            _log(f"{repo_id}: cached {rel} fails its checksum; downloading instead")
+            _log(f"{repo_id}: cached {rel} could not be verified; downloading instead")
             return None
         files[rel] = {"size": os.path.getsize(out), **expected}
     return files
@@ -195,12 +217,16 @@ def _from_hub(repo_id: str, rev: str, tmp: str) -> dict:
         raise ModelUnavailable(f"could not reach the Hugging Face Hub to download {repo_id} ({type(e).__name__})",
                                hint_net)
     expected = {}
+    pinned = expected_files(repo_id, rev)
     for s in info.siblings:
         if not _wanted(s.rfilename):
             continue
         lfs = getattr(s, "lfs", None)
         sha = (lfs.get("sha256") if isinstance(lfs, dict) else getattr(lfs, "sha256", None)) if lfs else None
         expected[s.rfilename] = {"size": s.size, **({"sha256": sha} if sha else {"git_sha1": s.blob_id})}
+        if pinned and s.rfilename in pinned and pinned[s.rfilename] != expected[s.rfilename]:
+            raise ModelFileError(f"the Hub's metadata for {repo_id}/{s.rfilename} differs from the hash shipped with "
+                                 "livermore for this pinned revision", "do not use this download; report it")
     total = sum(m["size"] or 0 for m in expected.values())
     _log(f"{repo_id}: downloading revision {rev[:10]} ({total / 1e6:,.0f} MB, {len(expected)} files) "
          f"into {local_dir(repo_id)}")

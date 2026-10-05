@@ -146,6 +146,34 @@ def test_missing_truncated_corrupted_files(fake_model):
     assert models.check(repo, rev, verify=True) == []
 
 
+def test_pinned_model_verified_by_shipped_hashes_not_blob_names(tmp_path, monkeypatch):
+    """Xet-backed caches name LFS blobs by Xet hash, not sha256: pinned hashes must decide."""
+    import huggingface_hub.constants as C
+    from livermore import models
+    repo, rev = "acme/xet", "d" * 40
+    data = {"config.json": b"{}", "model.safetensors": b"\x07" * 500}
+    shipped = {"config.json": {"size": 2, "git_sha1": hashlib.sha1(b"blob 2\0{}").hexdigest()},
+               "model.safetensors": {"size": 500, "sha256": hashlib.sha256(data["model.safetensors"]).hexdigest()}}
+    base = tmp_path / "hfc" / "models--acme--xet"
+    (base / "blobs").mkdir(parents=True)
+    (base / "snapshots" / rev).mkdir(parents=True)
+    for i, (rel, b) in enumerate(data.items()):
+        blob = base / "blobs" / (f"{i}" * 64)  # not the content hash
+        blob.write_bytes(b)
+        (base / "snapshots" / rev / rel).symlink_to(blob)
+    monkeypatch.setattr(C, "HF_HUB_CACHE", str(tmp_path / "hfc"))
+    monkeypatch.setitem(models.PINNED_FILES, repo, {"revision": rev, "files": shipped})
+    models.ensure(repo, rev)
+    assert models.check(repo, rev, verify=True) == []
+
+
+def test_shipped_pins_cover_pinned_revisions():
+    from livermore import models
+    for repo, rev in models.PINNED.items():
+        assert models.PINNED_FILES[repo]["revision"] == rev
+        assert any(f.endswith(".safetensors") for f in models.PINNED_FILES[repo]["files"])
+
+
 def test_revision_mismatch_is_reported(fake_model):
     from livermore import models
     repo, rev = fake_model
@@ -167,17 +195,17 @@ def test_unknown_model_offline_is_human_error(monkeypatch, tmp_path):
 # ---------------- device fallback ----------------
 
 def test_mps_unavailable_falls_back_to_cpu_with_warning(monkeypatch, capsys):
-    import torch
+    # Patch our seam, not torch: newer transformers inspect torch.backends.mps.is_available.__wrapped__.
+    from livermore import _device
     from livermore._device import resolve_torch_device
-    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: False)
+    monkeypatch.setattr(_device, "mps_available", lambda: False)
     assert resolve_torch_device("mps") == "cpu"
     assert "MPS is not available" in capsys.readouterr().err
     assert resolve_torch_device("cpu") == "cpu"
 
 
 def test_fallback_recorded_in_trace(monkeypatch, home):
-    import torch
-    from livermore import load
+    from livermore import _device, load
     from livermore.ask import ask
     from livermore.trace import read_trace
 
@@ -196,7 +224,7 @@ def test_fallback_recorded_in_trace(monkeypatch, home):
         def generate(self, p, n, **_):
             yield "ok"
 
-    monkeypatch.setattr(torch.backends.mps, "is_available", lambda: False)
+    monkeypatch.setattr(_device, "mps_available", lambda: False)
     a = ask("q", load(os.path.join(ROOT, "kb_data")), Fake(), entry="test")
     gen = next(s for s in read_trace(a.trace_id) if s["name"] == "generate")["attributes"]
     assert gen["device"] == "cpu" and gen["device_requested"] == "mps"
@@ -236,9 +264,11 @@ def test_mlx_cpu_fallback_really_runs_on_cpu(monkeypatch):
     """Regression: the fallback used to only relabel the device while mlx_lm kept its GPU stream."""
     mx = pytest.importorskip("mlx.core")
     pytest.importorskip("mlx_lm")
+    from huggingface_hub.constants import HF_HUB_CACHE
     from livermore import models
-    if models.check("mlx-community/Llama-3.2-1B-Instruct-4bit") and \
-            not os.path.isdir(os.path.expanduser("~/.cache/huggingface/hub/models--mlx-community--Llama-3.2-1B-Instruct-4bit")):
+    repo = "mlx-community/Llama-3.2-1B-Instruct-4bit"
+    snap = os.path.join(HF_HUB_CACHE, "models--" + repo.replace("/", "--"), "snapshots", models.PINNED[repo])
+    if models.check(repo) and not os.path.isdir(snap):
         pytest.skip("MLX model not available offline")
     gen_mod = sys.modules["mlx_lm.generate"]  # the module; `mlx_lm.generate` attribute is the function
     saved = gen_mod.generation_stream

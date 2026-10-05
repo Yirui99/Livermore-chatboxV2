@@ -30,6 +30,16 @@ logic were moved, not rewritten.
 - `tests/test_ops.py` (config, model cache, fallback, errors).
 
 ### Fixed — stage 5
+- Found by the first CI run: with Xet-backed repos (huggingface_hub >= 1.x) an LFS blob in the HF cache is named by
+  its Xet hash, not its sha256, so "blob name = hash" rejected good files. The expected size and hash of every file of
+  the three pinned revisions now ship with the package (`livermore/pinned_files.json`). They were cross-checked three
+  ways: against the Hub's metadata, against a fresh Hub download, and against the local cache. Copies are verified
+  against these hashes wherever they come from.
+- Tests patch `livermore._device.mps_available` instead of torch. Newer transformers read
+  `torch.backends.mps.is_available.__wrapped__` at import, which a plain lambda broke.
+- Checked under the newest dependencies CI resolves (torch 2.14.1, transformers 5.18.0, sentence-transformers 6.1.0,
+  huggingface_hub 1.33.0, mlx-lm 0.32.0): tests pass and equivalence PASS (max |Δscore| 1.2e-7). Versions are not
+  pinned for now.
 - MLX CPU fallback really runs on CPU. mlx_lm binds its generation stream to the default device at import time,
   and `import mlx_lm.generate` returns the *function* (the package shadows the module). The first version of the
   fallback only relabelled the device: it measured the same 363 tok/s as the GPU. Now it measures 5 tok/s, the same

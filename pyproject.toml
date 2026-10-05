@@ -32,3 +32,6 @@ version = { attr = "livermore.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["livermore*"]
+
+[tool.setuptools.package-data]
+livermore = ["pinned_files.json"]

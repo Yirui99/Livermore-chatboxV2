@@ -5,6 +5,11 @@ def warn(msg: str):
     print(f"livermore: warning: {msg}", file=sys.stderr, flush=True)
 
 
+def mps_available() -> bool:
+    import torch
+    return torch.backends.mps.is_available()
+
+
 def resolve_torch_device(pref: str = "auto") -> str:
     """auto -> cuda if available, else cpu (same policy as the pre-refactor rag_qa.RAGQA).
 
@@ -15,7 +20,7 @@ def resolve_torch_device(pref: str = "auto") -> str:
     import torch
     if pref == "auto":
         return "cuda" if torch.cuda.is_available() else "cpu"
-    if pref == "mps" and not torch.backends.mps.is_available():
+    if pref == "mps" and not mps_available():
         warn("device 'mps' requested but MPS is not available on this machine; using CPU")
         return "cpu"
     if pref == "cuda" and not torch.cuda.is_available():
